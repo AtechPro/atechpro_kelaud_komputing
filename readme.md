@@ -1,6 +1,6 @@
 # 🐳 AtechPro - Comprehensive Docker Networking Testing
 
-> *"This is where I discover my new addiction: **Docker Containerization**. Mostly, this is where I just put a lot of testing of every type of kelaud komputer (Cloud Computer)."*
+> *"This is where I discover my new addiction: **Docker Containerization**. Mostly, this is where I just put a lot of testing of every type of kelaud komputer (Cloud Computing)."*
 
 ---
 
@@ -12,18 +12,18 @@
 
 ## 🔧 Current Fixation: Kali Linux GUI in Docker
 
-Right now, I'm kinda obsessed with running **Kali Linux with a proper GUI inside a Docker container** — file manager and all the pentesting goodies.
+Right now, I'm kinda obsessed with running **Kali Linux with a GUI inside a Docker container** — file manager and Infrastructure Setups
 
-The why?
+
 
 If I can make a full-on security toolkit that's portable, light, and you can just recreate it with containers? That feels like building something properly useful.
 
 What I'm fiddling with:
-- Getting XFCE4 desktop to run inside Docker
-- Peeking in with VNC
-- Hooking it up to the host's stuff (files, etc. - carefully!)
-- Making file managers like Thunar just work
-- Trying to make containerized Kali a bit more secure
+- Getting XFCE4 desktop to run inside Docker (kali linux)
+- Peeking in with VNC (kali linux)
+- Hooking it up to the host's stuff (Filegator)
+- Making file managers like Thunar just work (Filegator)
+- Trying to make containerized Kali a bit more secure (for curiousity)
 
 It's a bit of a mess sometimes, this experimenting. But it's working better than I thought it would. 
 
@@ -50,17 +50,19 @@ Well
 1. I can't able to afford cloud Bill
 2. This is probably way to hosting onto the local to the internet, consider DDNS
 3. Everything is come with cost, not doing is also a cost, doing is also a cost
-4. Failure Teach not your Paper in your Final Exams 
+4. Failure Teachs, not your Final Exams paper that you should studied 2 week before the exam week
+
+
 ---
 
 ## 🧪 Toys I'm Playing With
 
 - Docker Engine
 - Docker Compose
-- Kali Linux (official and my own tweaks)
-- XFCE4 / VNC / x11vnc
+- Kali Linux 
+- XFCE4 / VNC 
 - Linux Biasa2 ja, mcm debian sma ubuntu, kadang kali
--  GUI forwarding
+- GUI forwarding via web or VNC 
 - Container networking secrets (bridges, iptables, DNS), this would be next
 
 ---
