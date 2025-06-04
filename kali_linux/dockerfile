@@ -1,0 +1,64 @@
+# Use the official Kali Linux rolling release as the base image.
+FROM kalilinux/kali-rolling
+
+# Set environment variables to prevent interactive prompts during package installation.
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Kuala_Lumpur 
+
+# Update package lists and install necessary packages.
+RUN apt update && apt install -y --no-install-recommends \
+    kali-desktop-xfce \
+    tightvncserver \
+    novnc \
+    firefox-esr \
+    xterm \
+    openssh-server \
+    xinit \
+    iproute2 \
+    xfonts-base \
+    libreoffice \
+    dbus-x11 \
+    fonts-dejavu \
+    fonts-liberation
+    
+# Set a default password for the 'root' user.
+RUN echo "root:123456789" | chpasswd
+
+# Configure SSH for password authentication.
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Create the .vnc directory.
+RUN mkdir -p /root/.vnc
+
+# Set a default VNC password.
+RUN echo '123456789' | vncpasswd -f > /root/.vnc/passwd && \
+    chmod 600 /root/.vnc/passwd
+
+# Clean up apt cache.
+RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Expose ports.
+EXPOSE 5901
+EXPOSE 8080
+EXPOSE 22
+
+# Create the entrypoint script.
+RUN echo '#!/bin/bash' > /start.sh && \ 
+    echo 'export HOME=/root' >> /start.sh && \
+    echo 'export USER=root' >> /start.sh && \
+    echo '/usr/sbin/sshd &' >> /start.sh && \
+    echo "if [ ! -f /root/.vnc/passwd ]; then echo '123456789' | vncpasswd -f > /root/.vnc/passwd && chmod 600 /root/.vnc/passwd; fi" >> /start.sh && \
+    echo '# Clean up old VNC lock files and sockets' >> /start.sh && \
+    echo 'rm -f /tmp/.X1-lock /tmp/.X11-unix/X1' >> /start.sh && \
+    echo 'vncserver -kill :1 > /dev/null 2>&1 || true' >> /start.sh && \
+    echo "cat > /root/.vnc/xstartup <<'EOF'\n#!/bin/sh\nunset SESSION_MANAGER\nstartxfce4 &\nEOF" >> /start.sh && \
+    echo 'chmod +x /root/.vnc/xstartup' >> /start.sh && \
+    echo 'vncserver -geometry 1920x1080 -depth 24 :1' >> /start.sh && \
+    echo 'sleep 2' >> /start.sh && \
+    echo 'while ! ss -tuln | grep -q ":5901"; do sleep 1; done' >> /start.sh && \
+    echo '/usr/share/novnc/utils/novnc_proxy --listen 8080 --vnc localhost:5901 &' >> /start.sh && \
+    echo 'tail -F /root/.vnc/*.log' >> /start.sh && \
+    chmod +x /start.sh
+
+CMD ["/start.sh"]

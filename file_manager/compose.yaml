@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  filegator:
+    image: filegator/filegator
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - FG_STORAGE_DRIVER=local
+      - FG_STORAGE_PATH=/var/www/html
