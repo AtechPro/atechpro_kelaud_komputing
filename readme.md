@@ -31,11 +31,13 @@ Well
 
 ## Chapter 1 : Kali Linux
 
-This is mostly you follow tutorial, copy and pasting, until you understand it, probably you need to twean
+This is mostly you follow tutorial, copy and pasting, until you understand it, probably you need to tweak
 
 > Port 80 should replace to port 8080 if needed btw
 
 well there is 3 ports, ssh, vnc and the web (which using novnc)
+
+OK don't be confused, **THIS IS NOT HOW DOCKER SHOULD BE RUNNED**, but well you know sometime doesn't mean you can't do it, its just experimental. 
 
 
 ## Chapter 2 : File Manager
@@ -62,3 +64,5 @@ Back in the Network Management Class, We being taught to learn about SNMP that p
 ## Chapter 5 : IT Tools, The cheat way to go with 
 
 I should know the apps back in the day, but you know its not too late to know or not too earlier
+
+> This is and AIO for IT, like damn its really good
