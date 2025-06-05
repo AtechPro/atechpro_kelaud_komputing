@@ -33,7 +33,7 @@ Well
 
 This is mostly you follow tutorial, copy and pasting, until you understand it, probably you need to twean
 
-    Port 80 should replace to port 8080 if needed btw
+> Port 80 should replace to port 8080 if needed btw
 
 well there is 3 ports, ssh, vnc and the web (which using novnc)
 
@@ -42,7 +42,7 @@ well there is 3 ports, ssh, vnc and the web (which using novnc)
 
 Filegator is i try, i mean first i tried the nextcloud but its too much happening on one time soo i downgrade myself to Filegator
 
-    I know about filegator because of AWS, well i have 1y free 
+> I know about filegator because of AWS, well i have 1y free 
 
 Soo its also uses the port 80, just i remap to flask port because that is most practical i can do 
 
@@ -56,4 +56,4 @@ I still figuring out what to do with is, its to confusing
 
 Back in the Network Management Class, We being taught to learn about SNMP that practical. well now i already found the proper SNMP but i run at docker 
 
-tak patut tak patut
+> ...tak patut tak patut, belum masyuk lagi 
