@@ -10,39 +10,6 @@
 
 ---
 
-## 🔧 Current Fixation: Kali Linux GUI in Docker
-
-Right now, I'm kinda obsessed with running **Kali Linux with a GUI inside a Docker container** — file manager and Infrastructure Setups
-
-
-
-If I can make a full-on security toolkit that's portable, light, and you can just recreate it with containers? That feels like building something properly useful.
-
-What I'm fiddling with:
-- Getting XFCE4 desktop to run inside Docker (kali linux)
-- Peeking in with VNC (kali linux)
-- Hooking it up to the host's stuff (Filegator)
-- Making file managers like Thunar just work (Filegator)
-- Trying to make containerized Kali a bit more secure (for curiousity)
-
-It's a bit of a mess sometimes, this experimenting. But it's working better than I thought it would. 
-
----
-
-## 📚 What's in This Playground?
-
-Not just about running containers — it's about **getting how they tick**:
-
-- `docker-compose.yml` for when you need more than one container
-- Custom Dockerfiles for when you want things *just so*
-- Network adventures: bridge, custom, host modes
-- How to keep data around with volumes
-- GUI apps living inside these boxes
-- Messing with the Kali Linux base image
-- The debugging toolkit: `tcpdump`, `nsenter`, `docker logs`, the lot
-
----
-
 ## 🚀 Why Take the "Scenic Route"?
 
 Well 
@@ -55,29 +22,38 @@ Well
 
 ---
 
-## 🧪 Toys I'm Playing With
-
-- Docker Engine
-- Docker Compose
-- Kali Linux 
-- XFCE4 / VNC 
-- Linux Biasa2 ja, mcm debian sma ubuntu, kadang kali
-- GUI forwarding via web or VNC 
-- Container networking secrets (bridges, iptables, DNS), this would be next
-
----
-
-## 🌐 What's on the Horizon?
-
-- A Kali GUI Docker image that anyone can just grab and use
-- A more secure container for ethical hacking scenarios
-- Playing with Docker-in-Docker (DinD) for nested fun
-- Looking at Kubernetes later on
-- Writing it all down so others can follow along (and make it better!)
-
----
 
 ## 📝 Thoughts from the Journey
 
 - Well sometime you can't connect and its normal espically playing with port 80 or similar
 - unofficially i learn devops with this, and nginx 
+
+
+## Chapter 1 : Kali Linux
+
+This is mostly you follow tutorial, copy and pasting, until you understand it, probably you need to twean
+
+    Port 80 should replace to port 8080 if needed btw
+
+well there is 3 ports, ssh, vnc and the web (which using novnc)
+
+
+## Chapter 2 : File Manager
+
+Filegator is i try, i mean first i tried the nextcloud but its too much happening on one time soo i downgrade myself to Filegator
+
+    I know about filegator because of AWS, well i have 1y free 
+
+Soo its also uses the port 80, just i remap to flask port because that is most practical i can do 
+
+
+## Chapter 3 : Resources Manager
+
+I still figuring out what to do with is, its to confusing
+
+
+## Chapter 4 : SNMP (Simple Network Management Protocol)
+
+Back in the Network Management Class, We being taught to learn about SNMP that practical. well now i already found the proper SNMP but i run at docker 
+
+tak patut tak patut

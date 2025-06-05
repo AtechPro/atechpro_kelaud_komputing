@@ -1,0 +1,42 @@
+version: '3.8' # Using a recent Docker Compose version for modern features
+
+services:
+  netdata:
+    image: netdata/netdata:latest # Always pull the latest stable version
+    container_name: netdata # Easy to identify
+    hostname: atechpro-network-manager # Your desired hostname for the Netdata dashboard
+    ports:
+      - "19999:19999" # Netdata's web interface port
+    cap_add:
+      - SYS_PTRACE # Required for collecting process information
+      - NET_ADMIN # Required for network interface monitoring
+    security_opt:
+      - apparmor:unconfined # Allows Netdata to collect more metrics
+    volumes:
+      - netdataconfig:/etc/netdata # Persistent configuration
+      - netdatalib:/var/lib/netdata # Persistent database for metrics
+      - netdatacache:/var/cache/netdata # Persistent cache
+      - /etc/passwd:/etc/passwd:ro # For user/group info
+      - /etc/group:/etc/group:ro # For user/group info
+      - /proc:/host/proc:ro # Mount host's /proc for system metrics
+      - /sys:/host/sys:ro # Mount host's /sys for system metrics
+      - /etc/os-release:/host/etc/os-release:ro # For OS info
+      - /var/run/docker.sock:/var/run/docker.sock:ro # To monitor Docker containers (crucial for your Homelab!)
+    restart: unless-stopped # Ensures Netdata restarts with Docker or on reboot
+    environment:
+      # Timezone setting for accurate timestamps in Netdata dashboard
+      - TZ=Asia/Kuala_Lumpur
+    # Optional: Resource limits, useful for cost-conscious use of resources
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.50' # Limit to 50% of one CPU core
+    #       memory: 256M # Limit to 256MB RAM
+    #     reservations:
+    #       cpus: '0.25' # Reserve 25% of one CPU core
+    #       memory: 128M # Reserve 128MB RAM
+
+volumes:
+  netdataconfig: # Volume for configuration files
+  netdatalib:    # Volume for Netdata's internal database
+  netdatacache:  # Volume for Netdata's cache
