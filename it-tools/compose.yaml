@@ -1,0 +1,8 @@
+version: '3.8' # It's good practice to specify the Compose file format version
+services:
+  it-tools:
+    image: corentinth/it-tools:latest # Specifies the Docker image to use. Using 'latest' is common for simple setups, but for production, you might want a specific version.
+    container_name: it-tools # Assigns a custom name to your container, making it easier to identify.
+    ports:
+      - "8080:80" # Maps port 8080 on your host to port 80 inside the container.
+    restart: unless-stopped # This ensures the container restarts automatically if it stops, unless you explicitly stop it. This is very useful for homelab services.

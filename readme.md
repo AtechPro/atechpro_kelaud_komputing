@@ -57,3 +57,8 @@ I still figuring out what to do with is, its to confusing
 Back in the Network Management Class, We being taught to learn about SNMP that practical. well now i already found the proper SNMP but i run at docker 
 
 > ...tak patut tak patut, belum masyuk lagi 
+
+
+## Chapter 5 : IT Tools, The cheat way to go with 
+
+I should know the apps back in the day, but you know its not too late to know or not too earlier
