@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres:15-alpine # Using a lightweight Alpine-based PostgreSQL image
+    container_name: netbox_postgres
+    hostname: atechpro-db # Hostname for the database container
+    environment:
+      POSTGRES_DB: netbox        # Database name
+      POSTGRES_USER: netbox      # Database user
+      POSTGRES_PASSWORD: your_strong_db_password # <--- CHANGE THIS! Generate a strong password
+      PGDATA: /var/lib/postgresql/data/pgdata # Subdirectory for data within the volume
+    volumes:
+      - netbox_postgres_data:/var/lib/postgresql/data # Persistent data volume
+    restart: unless-stopped
+    healthcheck: # Healthcheck to ensure database is ready
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # Optional: Resource limits for PostgreSQL
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1.0'
+    #       memory: 1024M
+
+  # Redis Service (for Caching and Background Tasks)
+  redis:
+    image: redis:7-alpine # Lightweight Alpine-based Redis image
+    container_name: netbox_redis
+    hostname: atechpro-redis # Hostname for the Redis container
+    command: ["redis-server", "--appendonly", "yes"] # Enable AOF persistence
+    volumes:
+      - netbox_redis_data:/data # Persistent data volume
+    restart: unless-stopped
+    healthcheck: # Healthcheck to ensure Redis is ready
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    # Optional: Resource limits for Redis
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 256M
+
+  # NetBox Main Application Service
+  netbox:
+    image: netboxcommunity/netbox:latest # Official NetBox Docker image
+    container_name: netbox_app
+    hostname: atechpro-netbox # Hostname for the NetBox app container
+    ports:
+      - "8000:8080" # Map host port 8000 to container port 8080 (NetBox default)
+    depends_on:
+      postgres:
+        condition: service_healthy # Ensure PostgreSQL is healthy before starting NetBox
+      redis:
+        condition: service_healthy # Ensure Redis is healthy before starting NetBox
+    environment:
+      # General NetBox Configuration
+      NETBOX_HOSTNAME: "atechpro.homelab" # Replace with your actual domain or IP if using reverse proxy
+      ALLOWED_HOSTS: "atechpro.homelab,your_homelab_ip" # <--- IMPORTANT: Add your Homelab IP and/or domain
+      TZ: Asia/Kuala_Lumpur # Based on your timezone
+      SECRET_KEY: "your_very_long_and_random_secret_key_here_at_least_50_chars" # <--- CHANGE THIS! Generate a unique, long key
+      # Database Configuration
+      DB_HOST: postgres
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: your_strong_db_password # <--- MUST MATCH POSTGRES_PASSWORD ABOVE
+      # Redis Configuration
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DATABASE: 0 # For caching
+      REDIS_CACHE_DATABASE: 1 # For tasks
+      # Initial Superuser (Optional, for first run only. Remove or comment out after first successful login)
+      # SUPERUSER_NAME: admin
+      # SUPERUSER_EMAIL: admin@example.com
+      # SUPERUSER_PASSWORD: your_initial_admin_password # <--- CHANGE THIS!
+    volumes:
+      - netbox_static:/opt/netbox/netbox/static # Persistent static files
+      - netbox_media:/opt/netbox/media # Persistent media files (e.g., device images)
+      - ./configuration.py:/opt/netbox/netbox/configuration.py:ro # Optional: Mount custom config.py if needed
+    restart: unless-stopped
+    healthcheck: # Healthcheck for the NetBox application
+      test: ["CMD-SHELL", "curl -sf -o /dev/null --write-out %{errormsg} --connect-timeout 1000 http://localhost:8080 || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 90s # Give NetBox more time to start up on first run
+    # Optional: Resource limits for NetBox application
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2.0'
+    #       memory: 2048M
+
+  # NetBox Worker Service (for background tasks like device polling, data imports)
+  netbox_worker:
+    image: netboxcommunity/netbox:latest
+    container_name: netbox_worker
+    hostname: atechpro-worker # Hostname for the worker container
+    command: ["rqworker", "default"] # Run the RQ worker
+    depends_on:
+      netbox:
+        condition: service_healthy # Worker depends on the main app being healthy
+    environment:
+      TZ: Asia/Kuala_Lumpur
+      SECRET_KEY: "your_very_long_and_random_secret_key_here_at_least_50_chars" # <--- MUST MATCH SECRET_KEY ABOVE
+      DB_HOST: postgres
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: your_strong_db_password # <--- MUST MATCH POSTGRES_PASSWORD ABOVE
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DATABASE: 0
+      REDIS_CACHE_DATABASE: 1
+    restart: unless-stopped
+    # Optional: Resource limits for NetBox worker
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1.0'
+    #       memory: 512M
+
+# Define Docker Volumes for persistent data
+volumes:
+  netbox_postgres_data:
+  netbox_redis_data:
+  netbox_static:
+  netbox_media:
