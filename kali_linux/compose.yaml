@@ -1,21 +1,20 @@
-version: '3.9'
-
+version: '3.8'
 services:
-  kaligui:
-    build: .
-    container_name: kaligui_desktop
+  kali-linux:
+    image: lscr.io/linuxserver/kali-linux:latest
+    container_name: kali-linux
+    security_opt:
+      - seccomp=unconfined
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SUBFOLDER=/ # optional
+      - TITLE="Kali Linux" # optional
     ports:
-      - "0.0.0.0:8080:8080"   # noVNC web interface (http://localhost:8080/vnc.html)
-      - "5901:5901"           # VNC desktop access (optional, for native VNC clients)
-      - "0.0.0.0:2222:22"     # SSH access (connect via ssh root@localhost -p 2222)
-    volumes:
-      - kalidata:/root         # Persist home directory (root)
+      - "3500:3000"
+      - "3600:3001"
+    devices:
+      - /dev/dri:/dev/dri # optional
+    shm_size: 4gb # Changed to 4gb
     restart: unless-stopped
-    cap_add:
-      - NET_ADMIN              # Needed for network tools like nmap, tcpdump
-      - NET_RAW                # Required by some networking utilities
-    privileged: true          # Gives full access to host devices (use cautiously)
-
-volumes:
-  kalidata:
-    # Optional: specify external driver or options here if needed
