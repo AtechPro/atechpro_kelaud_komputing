@@ -66,3 +66,10 @@ Back in the Network Management Class, We being taught to learn about SNMP that p
 I should know the apps back in the day, but you know its not too late to know or not too earlier
 
 > This is and AIO for IT, like damn its really good
+
+
+## Chapter 6 : The ChatGPT Alternative, but rarely used because is of bilion Parameter issues
+
+OpenWebui, one of Greatest Open Source Self Hosting AI
+
+> Depending what your model you download, make sure at first you have ollama installed there 
